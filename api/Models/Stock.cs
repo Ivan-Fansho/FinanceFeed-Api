@@ -14,7 +14,7 @@ namespace api.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Purchase { get; set; }
 
-        [Column(TypeName = "decimal(18,4)")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal LastDiv { get; set; }
 
         public string Industry { get; set; } = string.Empty;
@@ -22,7 +22,7 @@ namespace api.Models
         public long MarketCap { get; set; }
 
         public List<Comment> Comments { get; set; } = new List<Comment>();
-
+        
 
 
     }
