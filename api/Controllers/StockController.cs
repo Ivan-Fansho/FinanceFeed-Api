@@ -67,7 +67,7 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-         [Route("{id}")]
+        [Route("{id}")]
          public async Task<IActionResult> Delete([FromRoute] int id)
          {
             var stockModel = await _stockRepo.DeleteAsync(id);
