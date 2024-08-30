@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.Dtos.Stock;
 using api.Interfaces;
 using api.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
@@ -16,9 +18,63 @@ namespace api.Repository
         {
             _context = context;
         }
-        public Task<List<Stock>> GetAllAsync()
+
+        public async Task<Stock> CreateAsync(Stock StockModel)
         {
-            return _context.Stocks.ToListAsync();
+            await _context.Stocks.AddAsync(StockModel);
+            await _context.SaveChangesAsync();
+            return StockModel;
+
+        }
+
+        public async Task<Stock?> DeleteAsync(int id)
+        {
+            var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (stockModel == null)
+            {
+                return null;
+            }
+
+            _context.Stocks.Remove(stockModel);
+            await _context.SaveChangesAsync();
+            return stockModel;
+
+        }
+
+        public async Task<List<Stock>> GetAllAsync()
+        {
+            return await _context.Stocks.ToListAsync();
+        }
+
+        public async Task<Stock?> GetByIdAsync(int id)
+        {
+            return await _context.Stocks.FindAsync(id);
+            
+        }
+
+        public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto stockDto)
+        {
+            var existStock = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existStock == null)
+            {
+                return null;
+            }
+
+            existStock.Symbol = stockDto.Symbol;
+            existStock.CompanyName = stockDto.CompanyName;
+            existStock.Purchase = stockDto.Purchase;
+            existStock.LastDiv = stockDto.LastDiv;
+            existStock.Industry = stockDto.Industry;
+            existStock.MarketCap = stockDto.MarketCap;
+
+            await _context.SaveChangesAsync();
+
+            return existStock;
+
+
+
         }
     }
 }
